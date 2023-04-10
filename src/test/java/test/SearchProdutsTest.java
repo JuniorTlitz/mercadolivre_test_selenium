@@ -38,9 +38,10 @@ public class SearchProdutsTest {
             if(modeloSearch.getText().equals("PlayStation 5")){
                 WebElement priceSearch = navegador.findElement(By.xpath("/html/body/main/div[2]/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/div[1]/span/span[3]"));
                 System.out.println(priceSearch);
+            } else {
+                // Retorna á pagina anterior
+                navegador.navigate().back();
             }
-            // Retorna á pagina anterior
-            navegador.navigate().back();
         }
     }
 }
