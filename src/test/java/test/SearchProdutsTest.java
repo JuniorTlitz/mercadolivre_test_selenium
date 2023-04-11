@@ -8,6 +8,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import suporte.Web;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 public class SearchProdutsTest {
@@ -21,52 +24,29 @@ public class SearchProdutsTest {
         navegador.quit();
     }
     @Test
-    public void testSearchInfo(){
-        //new HomePageTest(navegador).typeSearch("ps5").clickSearch();
+    public void testSearchInfo() throws Exception {
 
+        File logFile = new File("D:\\Prints\\log.txt");
+        logFile.createNewFile();
+
+        PrintStream printStream = new PrintStream(new FileOutputStream(logFile));
+        System.setOut(printStream);
+
+        String item = "";
+        String preco = "";
         navegador.findElement(By.xpath("/html/body/header/div/div[2]/form/input")).sendKeys("ps5");
         navegador.findElement(By.xpath("/html/body/header/div/div[2]/form/button")).click();
+        List<WebElement> qtdItens = navegador.findElements(By.xpath("//h2[@class='ui-search-item__title shops__item-title']"));
+        int count = qtdItens.size();
 
-        //List<WebElement> aElements = navegador.findElements(By.xpath("//*[@id=\"root-app\"]/div/div[2]/section/ol[1]/li[2]/div/div/div[2]/div/div[2]/a"));
-        // Palavras-chave a serem buscadas
-        String[] palavrasChave = {"PS5", "PlayStation 5", "Playstation 5"};
-        // Localizar todos os elementos ol na página pelo seu seletor CSS
-        List<WebElement> olElements = navegador.findElements(By.tagName("ol"));
+        for(int i = 1; i <= count; i++){
+            item = navegador.findElement(By.xpath("((//h2[@class='ui-search-item__title shops__item-title']))["+i+"]")).getText();
+            preco = navegador.findElement(By.xpath("((//span[@class='price-tag-amount']))["+i+"]")).getText();
 
-        // Iterar através dos elementos ol
-        for (WebElement olElement : olElements) {
-            // Localizar todos os itens de lista (li) dentro do elemento ol
-            List<WebElement> liElements = olElement.findElements(By.tagName("li"));
-
-            // Iterar através dos itens de lista
-            for (WebElement liElement : liElements) {
-                // Verificar se o texto do item de lista contém alguma das palavras-chave
-                String textoLi = liElement.getText();
-                for (String palavraChave : palavrasChave) {
-                    if (textoLi.contains(palavraChave)) {
-                        // Se o texto do item de lista contém a palavra-chave, realizar a ação desejada
-                        System.out.println("Item de lista: " + textoLi);
-                        // ... fazer as operações desejadas com o item de lista ...
-                        break;
-                    }
-                }
-            }
+            System.out.println(item);
+            System.out.println(preco.replace("\n", ""));
         }
 
-//        // Interar através dos links
-//        for(WebElement link : aElements){
-//            // clica no link
-//            link.click();
-//            // Coleta as informaçoes
-//            // /html/body/main/div[2]/div[3]/div[1]/div[1]/div/div[3]/div/section/div[3]/div/div/div/div[1]/div[1]/table/tbody/tr[3]/td/span
-//            WebElement modeloSearch = navegador.findElement(By.xpath("/html/body/main/div[2]/div[3]/div[1]/div[1]/div/div[3]/div/section/div[3]/div/div/div/div[1]/div[1]/table/tbody/tr[3]/td/span"));
-//            if(modeloSearch.getText().equals("PlayStation 5")){
-//                WebElement priceSearch = navegador.findElement(By.xpath("/html/body/main/div[2]/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/div[1]/span/span[3]"));
-//                System.out.println(priceSearch);
-//            } else {
-//                // Retorna á pagina anterior
-//                navegador.navigate().back();
-//            }
-//        }
+        printStream.close();
     }
 }
